@@ -70,7 +70,7 @@ var offlineMessage = '<?php echo js_escape(lang('You are offline.')); ?>';
 			echo "$title\n";
 		}
 	}
-	echo "<h2>$title_all</h2>\n";
+	// echo "<h2>$title_all</h2>\n";
 	echo "<div id='ajaxstatus' class='jsonly hidden'></div>\n";
 	restart_session();
 	page_messages($error);
@@ -120,7 +120,7 @@ function page_footer($missing = "") {
 	?>
 </div>
 
-<?php switch_lang(); ?>
+<?php //switch_lang(); ?>
 <?php if ($missing != "auth") { ?>
 <form action="" method="post">
 <p class="logout">

@@ -67,7 +67,7 @@ foreach ($servers as $key => $value) {
 
 
 $auth = $_POST["auth"];
-if ($auth) {
+/*if ($auth) {
 	$invalids = unserialize(@file_get_contents(get_temp_dir() . "/adminer.invalid")); // @ - may not exist
 	$invalid = $invalids[$adminer->bruteForceKey()];
 	$next_attempt = ($invalid[1] > 30 ? $invalid[0] - time() : 0); // allow 30 invalid attempts
@@ -97,7 +97,7 @@ if ($auth) {
 		redirect(auth_url($vendor, $server, $username, $db));
 	}
 	
-} elseif ($_POST["logout"]) {
+} else*/if ($_POST["logout"]) {
 	if ($has_token && !verify_token()) {
 		page_header(lang('Logout'), lang('Invalid CSRF token. Send the form again.'));
 		page_footer("db");
@@ -163,7 +163,7 @@ function auth_error($error) {
 	cookie("adminer_key", ($_COOKIE["adminer_key"] ? $_COOKIE["adminer_key"] : rand_string()), $params["lifetime"]);
 	page_header(lang('Login'), $error, null);
 	echo "<form action='' method='post'>\n";
-	$adminer->loginForm();
+	// $adminer->loginForm();
 	echo "<div>";
 	hidden_fields($_POST, array("auth")); // expired session
 	echo "</div>\n";
