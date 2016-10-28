@@ -65,10 +65,15 @@ foreach ($servers as $key => $value) {
 }
 
 
-/*
+
 $auth = $_POST["auth"];
 if ($auth) {
-	
+	$invalids = unserialize(@file_get_contents(get_temp_dir() . "/adminer.invalid")); // @ - may not exist
+	$invalid = $invalids[$adminer->bruteForceKey()];
+	$next_attempt = ($invalid[1] > 30 ? $invalid[0] - time() : 0); // allow 30 invalid attempts
+	if ($next_attempt > 0) { //! do the same with permanent login
+		auth_error(lang('Too many unsuccessful logins, try again in %d minute(s).', ceil($next_attempt / 60)));
+	}
 	session_regenerate_id(); // defense against session fixation
 	$vendor = $auth["driver"];
 	$server = $auth["server"];
@@ -92,7 +97,20 @@ if ($auth) {
 		redirect(auth_url($vendor, $server, $username, $db));
 	}
 	
-}  elseif ($permanent && !$_SESSION["pwds"]) {
+} elseif ($_POST["logout"]) {
+	if ($has_token && !verify_token()) {
+		page_header(lang('Logout'), lang('Invalid CSRF token. Send the form again.'));
+		page_footer("db");
+		exit;
+	} else {
+		foreach (array("pwds", "db", "dbs", "queries") as $key) {
+			set_session($key, null);
+		}
+		unset_permanent();
+		redirect(substr(preg_replace('~\b(username|db|ns)=[^&]*&~', '', ME), 0, -1), lang('Logout successful.'));
+	}
+	
+} elseif ($permanent && !$_SESSION["pwds"]) {
 	session_regenerate_id();
 	$private = $adminer->permanentLogin();
 	foreach ($permanent as $key => $val) {
@@ -102,7 +120,7 @@ if ($auth) {
 		$_SESSION["db"][$vendor][$server][$username][$db] = true;
 	}
 }
-*/
+
 function unset_permanent() {
 	global $permanent;
 	foreach ($permanent as $key => $val) {
