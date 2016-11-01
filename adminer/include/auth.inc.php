@@ -50,8 +50,7 @@ function add_invalid_login() {
 
 session_regenerate_id(); // defense against session fixation
 
-include 'config.inc.php';
-foreach ($servers as $key => $value) {
+foreach ($servers_list as $key => $value) {
 	set_password($value['vendor'], $value['server'], $value['username'], $value['password']);
 	$_SESSION["db"][$value['vendor']][$value['server']][$value['username']][$value['db']] = true;
 	$permanent_key = true;
@@ -67,37 +66,7 @@ foreach ($servers as $key => $value) {
 
 
 $auth = $_POST["auth"];
-/*if ($auth) {
-	$invalids = unserialize(@file_get_contents(get_temp_dir() . "/adminer.invalid")); // @ - may not exist
-	$invalid = $invalids[$adminer->bruteForceKey()];
-	$next_attempt = ($invalid[1] > 30 ? $invalid[0] - time() : 0); // allow 30 invalid attempts
-	if ($next_attempt > 0) { //! do the same with permanent login
-		auth_error(lang('Too many unsuccessful logins, try again in %d minute(s).', ceil($next_attempt / 60)));
-	}
-	session_regenerate_id(); // defense against session fixation
-	$vendor = $auth["driver"];
-	$server = $auth["server"];
-	$username = $auth["username"];
-	$password = (string) $auth["password"];
-	$db = $auth["db"];
-	set_password($vendor, $server, $username, $password);
-	$_SESSION["db"][$vendor][$server][$username][$db] = true;
-	if ($auth["permanent"]) {
-		$key = base64_encode($vendor) . "-" . base64_encode($server) . "-" . base64_encode($username) . "-" . base64_encode($db);
-		$private = $adminer->permanentLogin(true);
-		$permanent[$key] = "$key:" . base64_encode($private ? encrypt_string($password, $private) : "");
-		cookie("adminer_permanent", implode(" ", $permanent));
-	}
-	if (count($_POST) == 1 // 1 - auth
-		|| DRIVER != $vendor
-		|| SERVER != $server
-		|| $_GET["username"] !== $username // "0" == "00"
-		|| DB != $db
-	) {
-		redirect(auth_url($vendor, $server, $username, $db));
-	}
-	
-} else*/if ($_POST["logout"]) {
+/*if ($_POST["logout"]) {
 	if ($has_token && !verify_token()) {
 		page_header(lang('Logout'), lang('Invalid CSRF token. Send the form again.'));
 		page_footer("db");
@@ -110,7 +79,7 @@ $auth = $_POST["auth"];
 		redirect(substr(preg_replace('~\b(username|db|ns)=[^&]*&~', '', ME), 0, -1), lang('Logout successful.'));
 	}
 	
-} elseif ($permanent && !$_SESSION["pwds"]) {
+} else*/if ($permanent && !$_SESSION["pwds"]) {
 	session_regenerate_id();
 	$private = $adminer->permanentLogin();
 	foreach ($permanent as $key => $val) {

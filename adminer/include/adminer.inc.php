@@ -776,17 +776,19 @@ focus(document.getElementById('username'));
 	* @return null
 	*/
 	function navigation($missing) {
-		global $VERSION, $jush, $drivers, $connection;
+		global $VERSION, $jush, $drivers,$drivers, $connection;
 		?>
 <h1>
 <?php echo $this->name(); ?> <span class="version"><?php echo $VERSION; ?></span>
 <a href="https://www.adminer.org/#download" target="_blank" id="version"><?php echo (version_compare($VERSION, $_COOKIE["adminer_version"]) < 0 ? h($_COOKIE["adminer_version"]) : ""); ?></a>
 </h1>
 <?php
+include 'config.inc.php';
+		// var_dump($servers[$server]);
 		if ($missing == "auth") {
 			$first = true;
-			foreach ((array) $_SESSION["pwds"] as $vendor => $servers) {
-				foreach ($servers as $server => $usernames) {
+			foreach ((array) $_SESSION["pwds"] as $vendor => $session_servers) {
+				foreach ($session_servers as $server => $usernames) {
 					foreach ($usernames as $username => $password) {
 						if ($password !== null) {
 							if ($first) {
@@ -795,7 +797,7 @@ focus(document.getElementById('username'));
 							}
 							$dbs = $_SESSION["db"][$vendor][$server][$username];
 							foreach (($dbs ? array_keys($dbs) : array("")) as $db) {
-								echo "<a href='" . h(auth_url($vendor, $server, $username, $db)) . "'>($drivers[$vendor]) " . h($username . ($server != "" ? "@$server" : "") . ($db != "" ? " - $db" : "")) . "</a><br>\n";
+								echo "<a href='" . h(auth_name_url($servers_list[$server]['name'])) . "'>($drivers[$vendor]) ".$servers_list[$server]['name']." </a><br>\n";
 							}
 						}
 					}

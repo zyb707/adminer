@@ -44,15 +44,16 @@ var offlineMessage = '<?php echo js_escape(lang('You are offline.')); ?>';
 
 <div id="content">
 <?php
+include 'config.inc.php';
 	if ($breadcrumb !== null) {
 		$link = substr(preg_replace('~\b(username|db|ns)=[^&]*&~', '', ME), 0, -1);
 		echo '<p id="breadcrumb"><a href="' . h($link ? $link : ".") . '">' . $drivers[DRIVER] . '</a> &raquo; ';
 		$link = substr(preg_replace('~\b(db|ns)=[^&]*&~', '', ME), 0, -1);
 		$server = (SERVER != "" ? h(SERVER) : lang('Server'));
 		if ($breadcrumb === false) {
-			echo "$server\n";
+			echo $servers_list[$server]['name']."\n";
 		} else {
-			echo "<a href='" . ($link ? h($link) : ".") . "' accesskey='1' title='Alt+Shift+1'>$server</a> &raquo; ";
+			echo "<a href='" . ($link ? h($link) : ".") . "' accesskey='1' title='Alt+Shift+1'>".$servers_list[$server]['name']."</a> &raquo; ";
 			if ($_GET["ns"] != "" || (DB != "" && is_array($breadcrumb))) {
 				echo '<a href="' . h($link . "&db=" . urlencode(DB) . (support("scheme") ? "&ns=" : "")) . '">' . h(DB) . '</a> &raquo; ';
 			}

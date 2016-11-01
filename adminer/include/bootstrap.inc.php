@@ -1,8 +1,21 @@
 <?php
 error_reporting(6135); // errors and warnings
 
+$server_name = '';
+include 'config.inc.php';
+if (isset($_GET['name']) && !empty($_GET['name'])) {
+	foreach ($servers_list as $key => $value) {
+		if ($_GET['name'] == $value['name']) {
+			$list = $value;
+		}
+	}
+	// $list = isset($servers_list[$_GET['name']])?$servers_list[$_GET['name']]:[];
+	$_SESSION["server_name"] = $_GET['name'];
+	foreach ($list as $key => $value) {
+		$_GET[$key] = $value;
+	}
+}
 include "../adminer/include/coverage.inc.php";
-
 // disable filter.default
 $filter = !preg_match('~^(unsafe_raw)?$~', ini_get("filter.default"));
 if ($filter || ini_get("filter.default_flags")) {

@@ -540,7 +540,21 @@ function auth_url($vendor, $server, $username, $db = null) {
 		. ($match[2] ? "&$match[2]" : "")
 	;
 }
-
+/** Get authenticated URL
+* @param string
+* @param string
+* @param string
+* @param string
+* @return string
+*/
+function auth_name_url($name, $db = null) {
+	global $drivers;
+	preg_match('~([^?]*)\\??(.*)~', remove_from_uri(implode("|", array_keys($drivers)) . "|username|" . ($db !== null ? "db|" : "") . session_name()), $match);
+	return "$match[1]?"
+		. (sid() ? SID . "&" : "")
+		. ($name != ""  ?  "name=" . urlencode($name):"")
+	;
+}
 /** Find whether it is an AJAX request
 * @return bool
 */

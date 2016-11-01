@@ -16,3 +16,4 @@ lang.php - Update translations
 tests/selenium.html - Selenium test suite
 
 adminer/include/config.inc.php -development ,the SQL config in this page and show the lelf (默认 数据库配置文件在这个里面)
+adminer/include/config.inc.defult.php -defult config  (参考示例 来配置adminer/include/config.inc.php)
